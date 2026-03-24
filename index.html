@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🗻☀️ 東京・富士五湖 9Days</title>
+    <style>
+        /* 基礎設定與和紙風格背景 */
+        :root {
+            --bg-color: #f5f5f0;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --text-main: #333333;
+            --text-sub: #666666;
+            --tag-eat: #ff7675;
+            --tag-buy: #e84393;
+            --tag-reserve: #d63031;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            /* 模擬微和紙紋理 */
+            background-image: url('https://www.transparenttextures.com/patterns/rice-paper.png');
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            padding-bottom: 80px; /* 留出底部導航列空間 */
+        }
+        
+        /* 頂部 Header */
+        header {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* 內容區塊 */
+        .container { padding: 16px; display: none; }
+        .container.active { display: block; }
+
+        /* 天氣預報區塊 */
+        .weather-banner {
+            background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* 每日行程卡片 */
+        .day-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            color: var(--primary-color);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 8px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid rgba(255,255,255,0.5);
+            position: relative;
+        }
+        .card-header { display: flex; align-items: center; margin-bottom: 8px; }
+        .card-icon { font-size: 1.5rem; margin-right: 12px; }
+        .card-title { font-size: 1.1rem; font-weight: bold; }
+        .card-desc { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 12px; line-height: 1.5; }
+        
+        /* 標籤與亮顯 */
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .tag {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+        }
+        .tag.eat { background-color: var(--tag-eat); }
+        .tag.buy { background-color: var(--tag-buy); }
+        .tag.reserve { background-color: var(--tag-reserve); }
+        
+        /* 導航按鈕 */
+        .nav-btn {
+            display: block;
+            background: var(--accent-color);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+        .nav-btn:active { opacity: 0.8; }
+
+        /* 工具分頁樣式 */
+        .tool-section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .tool-title { font-size: 1rem; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px;}
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+        .info-label { color: var(--text-sub); }
+        .info-value { font-weight: bold; }
+
+        /* 底部導航列 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            border-top: 1px solid #eee;
+        }
+        .nav-item {
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.8rem;
+            text-decoration: none;
+        }
+        .nav-item.active { color: var(--accent-color); font-weight: bold; }
+        .nav-icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+    <header>🗻☀️ 東京・富士五湖 2026</header>
+
+    <div id="itinerary" class="container active">
+        
+        <div class="day-title">Day 1：4/18 (六) 下町與動漫巡禮</div>
+        <div class="weather-banner">
+            <span>📍 東京・押上 / 龜有</span>
+            <span>⛅ 15°C~22°C (預測)</span>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <span class="card-icon">⛩️</span>
+                <span class="card-title">景點：龜有 & 烏龍派出所</span>
+            </div>
+            <div class="card-desc">
+                抵達押上放好行李後直奔龜有！這裡是《烏龍派出所》的經典舞台，街上散佈著兩津勘吉的銅像，記得去龜有香取神社走走。
+            </div>
+            <div class="tags">
+                <span class="tag buy">必買伴手禮: 龜有香取神社 限定兩津繪馬/御守</span>
+            </div>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=龜有車站" target="_blank" class="nav-btn">🗺️ 導航至 龜有車站</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-icon">🏮</span>
+                <span class="card-title">景點：上野與淺草寺</span>
+            </div>
+            <div class="card-desc">
+                傍晚前往上野公園散步，接著到淺草寺雷門看夜間點燈，避開人潮體驗寧靜的下町風情。
+            </div>
+            <div class="tags">
+                <span class="tag eat">必吃美食: 淺草炸肉餅、花月堂菠蘿麵包</span>
+            </div>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=淺草寺" target="_blank" class="nav-btn">🗺️ 導航至 淺草寺</a>
+        </div>
+
+        <div class="day-title">Day 2：4/19 (日) 都市景觀與潮流</div>
+        <div class="weather-banner">
+            <span>📍 東京・晴空塔 / 表參道</span>
+            <span>☀️ 16°C~24°C (預測)</span>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-icon">🍴</span>
+                <span class="card-title">餐廳：敘敘苑 (晴空塔店)</span>
+            </div>
+            <div class="card-desc">
+                10:30 報到。在 30 樓的高空俯瞰東京市區，享受頂級的日式燒肉午間套餐，CP 值極高！
+            </div>
+            <div class="tags">
+                <span class="tag eat">必點菜單: 商業午餐燒肉套餐 (午餐時段限定)</span>
+                <span class="tag reserve">重要預約代號: (請在此填入您的訂位代號)</span>
+            </div>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=敘敘苑+晴空塔" target="_blank" class="nav-btn">🗺️ 導航至 敘敘苑晴空塔店</a>
+        </div>
+
+        <div class="day-title">Day 7：4/24 (五) 啟程！富士五湖自駕</div>
+        <div class="weather-banner">
+            <span>📍 山梨・本栖湖</span>
+            <span>🌤️ 8°C~15°C (山區偏冷)</span>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-icon">🚗</span>
+                <span class="card-title">交通：新宿租車出發</span>
+            </div>
+            <div class="card-desc">
+                備妥台灣駕照正本與日文譯本，從新宿取車後，經由高速公路前往山中湖，開啟自駕之旅。
+            </div>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=山中湖" target="_blank" class="nav-btn">🗺️ 車用導航至 山中湖</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-icon">🏕️</span>
+                <span class="card-title">住宿/景點：浩庵露營場</span>
+            </div>
+            <div class="card-desc">
+                位於本栖湖畔，《搖曳露營△》第一集撫子與凜相遇的聖地，這裡也是日幣千圓鈔票背面富士山的取景地。極致的自然極簡美景！
+            </div>
+            <div class="tags">
+                <span class="tag eat">必吃美食: 露營自炊咖哩麵 (致敬動畫)</span>
+                <span class="tag reserve">重要提醒: 湖畔風大，注意夜間保暖</span>
+            </div>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=浩庵露營場" target="_blank" class="nav-btn">🗺️ 車用導航至 浩庵露營場</a>
+        </div>
+        </div>
+
+    <div id="tools" class="container">
+        <div class="tool-section">
+            <div class="tool-title">✈️ 航班資訊</div>
+            <div class="info-row"><span class="info-label">4/18 去程</span><span class="info-value">樂桃 MM620 (02:00 TPE)</span></div>
+            <div class="info-row"><span class="info-label">抵達</span><span class="info-value">06:30 NRT T1</span></div>
+            <hr style="border:0; border-top:1px solid #eee; margin:8px 0;">
+            <div class="info-row"><span class="info-label">4/26 回程</span><span class="info-value">星宇 JX803 (16:20 NRT T2)</span></div>
+            <div class="info-row"><span class="info-label">抵達</span><span class="info-value">19:00 TPE T1</span></div>
+        </div>
+
+        <div class="tool-section">
+            <div class="tool-title">🏠 住宿資訊快速查看</div>
+            <div class="info-row"><span class="info-label">4/18 (1晚)</span><span class="info-value">押上 (16:00入/10:00退)</span></div>
+            <div class="info-row"><span class="info-label">4/19-4/23 (5晚)</span><span class="info-value">中井站週邊</span></div>
+            <div class="info-row"><span class="info-label">4/24 (1晚)</span><span class="info-value">浩庵露營場 (本栖湖)</span></div>
+            <div class="info-row"><span class="info-label">4/25 (1晚)</span><span class="info-value">河口湖邊 (15:00入/10:00退)</span></div>
+        </div>
+
+        <div class="tool-section">
+            <div class="tool-title">🆘 緊急聯絡電話</div>
+            <div class="info-row"><span class="info-label">報警</span><span class="info-value">110</span></div>
+            <div class="info-row"><span class="info-label">救護車/火警</span><span class="info-value">119</span></div>
+            <div class="info-row"><span class="info-label">台灣駐日代表處</span><span class="info-value">0800-004711</span></div>
+        </div>
+
+        <div class="tool-section">
+            <div class="tool-title">💰 簡易預算/記帳表 (可截圖編輯)</div>
+            <table style="width:100%; text-align:left; font-size:0.9rem; border-collapse: collapse;">
+                <tr style="border-bottom: 2px solid #ccc;"><th>項目</th><th>預算</th><th>實際花費</th></tr>
+                <tr style="border-bottom: 1px solid #eee;"><td style="padding:8px 0;">機票</td><td>NT$ 6940<br>+ ¥40130</td><td></td></tr>
+                <tr style="border-bottom: 1px solid #eee;"><td style="padding:8px 0;">住宿</td><td></td><td></td></tr>
+                <tr style="border-bottom: 1px solid #eee;"><td style="padding:8px 0;">租車/交通</td><td></td><td></td></tr>
+                <tr><td style="padding:8px 0;">吃喝玩樂</td><td></td><td></td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active" onclick="switchTab('itinerary', this)">
+            <span class="nav-icon">📅</span>行程表
+        </a>
+        <a href="#" class="nav-item" onclick="switchTab('tools', this)">
+            <span class="nav-icon">🛠️</span>實用工具
+        </a>
+    </div>
+
+    <script>
+        function switchTab(tabId, element) {
+            // 隱藏所有內容
+            document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+            // 取消所有導航按鈕的高亮
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            // 顯示選中的內容
+            document.getElementById(tabId).classList.add('active');
+            // 高亮點擊的按鈕
+            element.classList.add('active');
+        }
+    </script>
+</body>
+</html>
